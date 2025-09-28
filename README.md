@@ -1,12 +1,44 @@
-# React + Vite
+```mermaid
+graph TD;
+    App["App
+    Root component
+    Renders layout structure
+    Contains title and ToDoList"] 
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+    ToDoList["ToDoList
+    State: todos[]
+    Main container managing todo operations"] 
 
-Currently, two official plugins are available:
+    AddTodoForm["AddTodoForm
+    Props: onAddTodo (callback)
+    State: newTodoText
+    "] 
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+    ToDoListItem["ToDoListItem
+    Props: todo object, onToggleComplete, onRemoveTodo
+    Manages completion toggle & deletion"] 
 
-## Expanding the ESLint configuration
+    %% Root level
+    App --> ToDoList
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+    %% ToDoList children
+    ToDoList --> AddTodoForm
+    ToDoList --> ToDoListItem
+
+    %% AddTodoForm - data flow
+    AddTodoForm -.->|"onAddTodo(newTodoText)"| ToDoList
+
+    %% ToDoListItem - data flow
+    ToDoListItem -.->|"onToggleComplete()"| ToDoList
+    ToDoListItem -.->|"onRemoveTodo(todo.id)"| ToDoList
+```
+
+# Explanation
+
+ToDoList: зберігає масив справ todos та керує додаванням, видаленням і відміткою виконання.
+
+AddTodoForm: керує полем введення newTodoText і передає нову справу в ToDoList через onAddTodo.
+
+ToDoListItem: керує локальною подією кліку для завершення справи і видалення; передає виклики до ToDoList.
+
+App: не має стану, служить лише обгорткою і рендерить ToDoList.
